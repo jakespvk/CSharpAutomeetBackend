@@ -3,12 +3,14 @@ namespace AutomeetBackend
     public class AttioAdapter : DbAdapter
     {
         public string AccessToken { get; set; }
+
         public override Guid UserId { get; set; }
         public override List<string>? Columns { get; set; }
         public override List<string>? ActiveColumns { get; set; }
 
-        public AttioAdapter(string accessToken)
+        public AttioAdapter(Guid userId, string accessToken)
         {
+            UserId = userId;
             AccessToken = accessToken;
         }
 

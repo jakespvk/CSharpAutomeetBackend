@@ -1,6 +1,6 @@
 namespace AutomeetBackend
 {
-    sealed class ActiveCampaignAdapter : DbAdapter
+    public class ActiveCampaignAdapter : DbAdapter
     {
         public string ApiUrl { get; set; }
         public string ApiKey { get; set; }
@@ -9,8 +9,9 @@ namespace AutomeetBackend
         public override List<string>? Columns { get; set; }
         public override List<string>? ActiveColumns { get; set; }
 
-        public ActiveCampaignAdapter(string apiUrl, string apiKey)
+        public ActiveCampaignAdapter(Guid userId, string apiUrl, string apiKey)
         {
+            UserId = userId;
             ApiUrl = apiUrl;
             ApiKey = apiKey;
         }
@@ -18,6 +19,7 @@ namespace AutomeetBackend
         public override async Task getColumns()
         {
             // call api and get columns list
+            await Task.Run(() => "hi");
             Columns = new List<string> { "id", "name", "email" };
         }
 

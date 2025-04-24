@@ -7,10 +7,8 @@ namespace AutomeetBackend
         Daily,
     }
 
-    public sealed class Subscription
+    public class Subscription
     {
-        [System.ComponentModel.DataAnnotations.Key]
-        public Guid UserId { get; set; }
         public bool Subscribed { get; set; }
         public PollFrequency PollFrequency { get; set; }
 

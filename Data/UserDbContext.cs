@@ -13,8 +13,24 @@ namespace AutomeetBackend
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
+                .OwnsOne(u => u.Subscription);
+            // modelBuilder.Entity<User>()
+            //     .OwnsOne(u => u.DbAdapter, nav =>
+            //     {
+            //         nav.HasDiscriminator<string>("AdapterType")
+            //         .HasValue<AttioAdapter>("Attio")
+            //         .HasValue<ActiveCampaignAdapter>("ActiveCampaign");
+            //     });
+
+            modelBuilder.Entity<User>()
                 .HasOne(u => u.DbAdapter)
-                .WithOne();
+                .WithOne()
+                .HasForeignKey<DbAdapter>(d => d.UserId);
+
+            modelBuilder.Entity<DbAdapter>()
+                .HasDiscriminator<string>("AdapterType")
+                .HasValue<AttioAdapter>("Attio")
+                .HasValue<ActiveCampaignAdapter>("ActiveCampaign");
         }
     }
 }

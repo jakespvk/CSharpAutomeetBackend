@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/jakes/cecs/forfun/csharp/AutomeetBackend/AutomeetBackend.csproj": {}
+    "/home/jakes/scratch/csharp/CSharpAutomeetBackend/AutomeetBackend.csproj": {}
   },
   "projects": {
-    "/home/jakes/cecs/forfun/csharp/AutomeetBackend/AutomeetBackend.csproj": {
+    "/home/jakes/scratch/csharp/CSharpAutomeetBackend/AutomeetBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/jakes/cecs/forfun/csharp/AutomeetBackend/AutomeetBackend.csproj",
+        "projectUniqueName": "/home/jakes/scratch/csharp/CSharpAutomeetBackend/AutomeetBackend.csproj",
         "projectName": "AutomeetBackend",
-        "projectPath": "/home/jakes/cecs/forfun/csharp/AutomeetBackend/AutomeetBackend.csproj",
+        "projectPath": "/home/jakes/scratch/csharp/CSharpAutomeetBackend/AutomeetBackend.csproj",
         "packagesPath": "/home/jakes/.nuget/packages/",
-        "outputPath": "/home/jakes/cecs/forfun/csharp/AutomeetBackend/obj/",
+        "outputPath": "/home/jakes/scratch/csharp/CSharpAutomeetBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/jakes/.nuget/NuGet/NuGet.Config"
@@ -38,12 +38,16 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -66,12 +70,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[9.0.3, 9.0.3]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -80,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -302,3 +302,4 @@
 /home/jakes/scratch/csharp/CSharpAutomeetBackend/obj/Debug/net9.0/AutomeetBackend.pdb
 /home/jakes/scratch/csharp/CSharpAutomeetBackend/obj/Debug/net9.0/AutomeetBackend.genruntimeconfig.cache
 /home/jakes/scratch/csharp/CSharpAutomeetBackend/obj/Debug/net9.0/ref/AutomeetBackend.dll
+/home/jakes/cecs/forfun/csharp/AutomeetBackend/obj/Debug/net9.0/AutomeetBackend.sourcelink.json

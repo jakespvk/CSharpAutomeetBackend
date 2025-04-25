@@ -13,17 +13,31 @@ namespace AutomeetBackend.Controllers
             _userService = userService;
         }
 
-        [HttpGet("/{userId}")]
-        public async Task<ActionResult<Subscription>> GetUserSubscription(Guid userId)
+        [HttpGet("{email}")]
+        public async Task<ActionResult<Subscription>> GetUserSubscription(string email)
         {
-            User? user = await _userService.GetUserAsync(userId);
+            User? user = await _userService.GetUserAsync(email);
             if (user == null)
             {
                 return NotFound();
             }
-
             return user.Subscription;
         }
 
+        [HttpPut]
+        public async Task<ActionResult<User>> UpdateUserSubscription(
+                string email,
+                Subscription subscription
+            )
+        {
+            if (await _userService.UpdateUserSubscriptionAsync(email, subscription))
+            {
+                return Accepted();
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }

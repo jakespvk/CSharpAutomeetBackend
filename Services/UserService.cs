@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace AutomeetBackend
 {
     public sealed class UserService
@@ -17,9 +19,12 @@ namespace AutomeetBackend
             return user;
         }
 
-        public async Task<User?> GetUserAsync(Guid id)
+        public async Task<User?> GetUserAsync(string email)
         {
-            return await _context.Users.FindAsync(id);
+            return await _context
+                .Users
+                .Include(u => u.DbAdapter)
+                .FirstOrDefaultAsync(x => x.Email == email);
         }
 
         public async Task<bool> UpdateUserSubscriptionAsync(
@@ -27,7 +32,10 @@ namespace AutomeetBackend
                 Subscription subscription
             )
         {
-            User? user = await _context.Users.FindAsync(email);
+            User? user = await _context
+                .Users
+                .Include(u => u.DbAdapter)
+                .FirstOrDefaultAsync(x => x.Email == email);
             if (user == null) return false;
 
             user.Subscription = subscription;
@@ -40,10 +48,28 @@ namespace AutomeetBackend
                 DbAdapter dbAdapter
             )
         {
-            User? user = await _context.Users.FindAsync(email);
+            User? user = await _context
+                .Users
+                .Include(u => u.DbAdapter)
+                .FirstOrDefaultAsync(x => x.Email == email);
             if (user == null) return false;
 
             user.DbAdapter = dbAdapter;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> DeleteUserDbAsync(
+                string email
+            )
+        {
+            User? user = await _context
+                .Users
+                .Include(u => u.DbAdapter)
+                .FirstOrDefaultAsync(x => x.Email == email);
+            if (user == null) return false;
+
+            user.DbAdapter = null;
             await _context.SaveChangesAsync();
             return true;
         }

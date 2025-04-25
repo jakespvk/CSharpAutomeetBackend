@@ -8,7 +8,11 @@ namespace AutomeetBackend
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.Converters.Add(new DbAdapterConverter());
+                });
             builder.Services.AddDbContext<UserDbContext>(options =>
                     options.UseSqlite("Data Source=user.db"));
             builder.Services.AddScoped<UserService>();

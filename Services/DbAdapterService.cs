@@ -15,6 +15,7 @@ namespace AutomeetBackend
             return _dbAdapter.Columns;
         }
 
+        // unnecessary I think
         public async Task<bool> contactDataFound()
         {
             if (string.IsNullOrEmpty(await _dbAdapter.getContactData()))

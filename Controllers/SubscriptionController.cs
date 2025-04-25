@@ -13,10 +13,10 @@ namespace AutomeetBackend.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{email}")]
-        public async Task<ActionResult<Subscription>> GetUserSubscription(string email)
+        [HttpGet("{userEmail}")]
+        public async Task<ActionResult<Subscription>> GetUserSubscription(string userEmail)
         {
-            User? user = await _userService.GetUserAsync(email);
+            User? user = await _userService.GetUserAsync(userEmail);
             if (user == null)
             {
                 return NotFound();
@@ -24,13 +24,14 @@ namespace AutomeetBackend.Controllers
             return user.Subscription;
         }
 
-        [HttpPut]
+        [HttpPut("{userEmail}")]
         public async Task<ActionResult<User>> UpdateUserSubscription(
-                string email,
+                string userEmail,
+                [FromBody]
                 Subscription subscription
             )
         {
-            if (await _userService.UpdateUserSubscriptionAsync(email, subscription))
+            if (await _userService.UpdateUserSubscriptionAsync(userEmail, subscription))
             {
                 return Accepted();
             }
@@ -39,5 +40,6 @@ namespace AutomeetBackend.Controllers
                 return NotFound();
             }
         }
+
     }
 }

@@ -4,11 +4,11 @@ namespace AutomeetBackend
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly UserService _userService;
 
-        public UsersController(UserService userService)
+        public UserController(UserService userService)
         {
             _userService = userService;
         }

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace AutomeetBackend
 {
     public enum PollFrequency
@@ -10,6 +12,7 @@ namespace AutomeetBackend
     public class Subscription
     {
         public bool Subscribed { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
         public PollFrequency PollFrequency { get; set; }
 
         public Subscription()

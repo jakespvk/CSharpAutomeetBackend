@@ -31,9 +31,9 @@ namespace AutomeetBackend
             this.Columns = await response.Content.ReadFromJsonAsync<List<string>>();
         }
 
-        public override Task<string> getContactData()
+        public async override Task<string> getContactData()
         {
-            return new Task<string>(() => "here in getContactData");
+            return await new Task<string>(() => "here in getContactData");
         }
     }
 }

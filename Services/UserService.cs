@@ -45,7 +45,9 @@ namespace AutomeetBackend
 
         public async Task<bool> UpdateUserDbAsync(
                 string email,
-                DbAdapter dbAdapter
+                DbAdapter dbAdapter,
+                List<string>? columns = null,
+                List<string>? activeColumns = null
             )
         {
             User? user = await _context
@@ -55,7 +57,10 @@ namespace AutomeetBackend
             if (user == null) return false;
 
             user.DbAdapter = dbAdapter;
+            if (columns is not null) user.DbAdapter.Columns = columns;
+            if (activeColumns is not null) user.DbAdapter.ActiveColumns = activeColumns;
             await _context.SaveChangesAsync();
+
             return true;
         }
 

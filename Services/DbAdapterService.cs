@@ -1,6 +1,6 @@
 namespace AutomeetBackend
 {
-    public sealed class DbAdapterService
+    public class DbAdapterService
     {
         private DbAdapter _dbAdapter;
 
@@ -9,9 +9,19 @@ namespace AutomeetBackend
             _dbAdapter = dbAdapter;
         }
 
-        public async Task<string> getContactData()
+        public async Task<List<string>?> getColumns()
         {
-            return await _dbAdapter.getContactData();
+            await _dbAdapter.getColumns();
+            return _dbAdapter.Columns;
+        }
+
+        public async Task<bool> contactDataFound()
+        {
+            if (string.IsNullOrEmpty(await _dbAdapter.getContactData()))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -6,11 +6,13 @@ namespace AutomeetBackend
     {
         private readonly UserDbContext _context;
 
+        // shouldn't know about the db
         public UserService(UserDbContext context)
         {
             _context = context;
         }
 
+        // pure repository responsibility
         public async Task<User> CreateUserAsync(string email)
         {
             User user = new User(email);
@@ -19,6 +21,9 @@ namespace AutomeetBackend
             return user;
         }
 
+        // change to return User 
+        // two options: fail with exception
+        // or return default user (create new user or default user)
         public async Task<User?> GetUserAsync(string email)
         {
             return await _context
@@ -27,7 +32,11 @@ namespace AutomeetBackend
                 .FirstOrDefaultAsync(x => x.Email == email);
         }
 
-        public async Task<bool> UpdateUserSubscriptionAsync(
+        // "this method smells" -Kostya
+        // promises to update user sub
+        // some mysterious reason can return false
+        // should be "TryUpdateUserSubscriptionAsync"
+        public async Task<bool> TryUpdateUserSubscriptionAsync(
                 string email,
                 Subscription subscription
             )
@@ -36,13 +45,20 @@ namespace AutomeetBackend
                 .Users
                 .Include(u => u.DbAdapter)
                 .FirstOrDefaultAsync(x => x.Email == email);
-            if (user == null) return false;
+
+            // gray area - maybe belong in UserRepository, maybe not
+            // keep in service, kind of business logic
+            if (user == null) 
+            { 
+                return false; 
+            }
 
             user.Subscription = subscription;
             await _context.SaveChangesAsync();
             return true;
         }
 
+        // keep in service, kind of business logic
         public async Task<bool> UpdateUserDbAsync(
                 string email,
                 DbAdapter dbAdapter,

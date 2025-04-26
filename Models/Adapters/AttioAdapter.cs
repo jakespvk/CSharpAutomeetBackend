@@ -8,12 +8,6 @@ namespace AutomeetBackend
         public override List<string>? Columns { get; set; }
         public override List<string>? ActiveColumns { get; set; }
 
-        // public AttioAdapter()
-        // {
-        //     UserId = Guid.Empty;
-        //     AccessToken = "";
-        // }
-
         public AttioAdapter(Guid userId, string accessToken)
         {
             UserId = userId;

@@ -13,11 +13,19 @@ namespace AutomeetBackend.Controllers
             _userService = userService;
         }
 
+        // "well...... there are a lot of things to think about here" -Kostya
+        // definitely, split it to two methods, one init UserDbAdapter
+        // other one, updateDbAdapter
+        // in both cases maybe we can maybe we don't 
+        // pass the responsibility of providing the whole already populated
+        // dbAdapter by the user of the API
         [HttpPut("{userEmail}")]
-        public async Task<ActionResult<List<string>?>> UpdateUserDb(
+        public async Task<ActionResult<List<string>?>> InitializeUserDbAdapter(
                 string userEmail,
                 [FromBody]
                 DbAdapter dbAdapter
+            // this returns the creds for user db adapter API so I can
+            // go get the columns
             )
         {
             await dbAdapter.getColumns();
@@ -40,23 +48,27 @@ namespace AutomeetBackend.Controllers
         }
 
         [HttpPut("{userEmail}/active-columns")]
-        public async Task<ActionResult<List<string>>> UpdateUserActiveColumns(
+        public async Task<ActionResult> UpdateUserActiveColumns(
                 string userEmail,
                 [FromBody]
                 List<string> activeColumns
             )
         {
             User? user = await _userService.GetUserAsync(userEmail);
-            if (user is User)
+
+            if (user == null)
             {
-                if (user.DbAdapter is DbAdapter)
-                {
-                    user.DbAdapter.ActiveColumns = activeColumns;
-                    return user.DbAdapter.ActiveColumns;
-                }
+                return NotFound();
+            }
+
+            if (user.DbAdapter == null)
+            {
                 return BadRequest("No Db Provider set");
             }
-            return NotFound();
+
+            user.DbAdapter.ActiveColumns = activeColumns;
+            // save to db
+            return Ok();
         }
 
         [HttpDelete("{userEmail}")]
@@ -66,10 +78,7 @@ namespace AutomeetBackend.Controllers
             {
                 return Accepted();
             }
-            else
-            {
-                return NotFound();
-            }
+            return NotFound();
         }
     }
 }

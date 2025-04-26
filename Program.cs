@@ -15,6 +15,7 @@ namespace AutomeetBackend
                 });
             builder.Services.AddDbContext<UserDbContext>(options =>
                     options.UseSqlite("Data Source=user.db"));
+            builder.Services.AddScoped<UserRepository>();
             builder.Services.AddScoped<UserService>();
 
             var app = builder.Build();

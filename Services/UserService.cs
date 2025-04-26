@@ -1,36 +1,15 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace AutomeetBackend
 {
     public sealed class UserService
     {
-        private readonly UserDbContext _context;
+        private readonly UserRepository _repository;
 
         // shouldn't know about the db
-        public UserService(UserDbContext context)
+        public UserService(UserRepository userRepository)
         {
-            _context = context;
+            _repository = userRepository;
         }
 
-        // pure repository responsibility
-        public async Task<User> CreateUserAsync(string email)
-        {
-            User user = new User(email);
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-            return user;
-        }
-
-        // change to return User 
-        // two options: fail with exception
-        // or return default user (create new user or default user)
-        public async Task<User?> GetUserAsync(string email)
-        {
-            return await _context
-                .Users
-                .Include(u => u.DbAdapter)
-                .FirstOrDefaultAsync(x => x.Email == email);
-        }
 
         // "this method smells" -Kostya
         // promises to update user sub
@@ -41,57 +20,64 @@ namespace AutomeetBackend
                 Subscription subscription
             )
         {
-            User? user = await _context
-                .Users
-                .Include(u => u.DbAdapter)
-                .FirstOrDefaultAsync(x => x.Email == email);
+            User? user = await _repository.GetUserAsync(email);
 
             // gray area - maybe belong in UserRepository, maybe not
             // keep in service, kind of business logic
-            if (user == null) 
-            { 
-                return false; 
+            if (user == null)
+            {
+                return false;
             }
 
             user.Subscription = subscription;
-            await _context.SaveChangesAsync();
+            await _repository.SaveChangesAsync();
             return true;
         }
 
         // keep in service, kind of business logic
-        public async Task<bool> UpdateUserDbAsync(
+        public async Task<bool> TryUpdateUserDbAsync(
                 string email,
                 DbAdapter dbAdapter,
                 List<string>? columns = null,
                 List<string>? activeColumns = null
             )
         {
-            User? user = await _context
-                .Users
-                .Include(u => u.DbAdapter)
-                .FirstOrDefaultAsync(x => x.Email == email);
-            if (user == null) return false;
+            User? user = await _repository.GetUserAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
 
             user.DbAdapter = dbAdapter;
-            if (columns is not null) user.DbAdapter.Columns = columns;
-            if (activeColumns is not null) user.DbAdapter.ActiveColumns = activeColumns;
-            await _context.SaveChangesAsync();
 
+            if (columns != null)
+            {
+                user.DbAdapter.Columns = columns;
+            }
+
+            if (activeColumns != null)
+            {
+                user.DbAdapter.ActiveColumns = activeColumns;
+            }
+
+            await _repository.SaveChangesAsync();
             return true;
         }
 
-        public async Task<bool> DeleteUserDbAsync(
+        public async Task<bool> TryDeleteUserDbAsync(
                 string email
             )
         {
-            User? user = await _context
-                .Users
-                .Include(u => u.DbAdapter)
-                .FirstOrDefaultAsync(x => x.Email == email);
-            if (user == null) return false;
+            User? user = await _repository.GetUserAsync(email);
+
+            if (user == null)
+            {
+                return false;
+            }
 
             user.DbAdapter = null;
-            await _context.SaveChangesAsync();
+
+            await _repository.SaveChangesAsync();
             return true;
         }
     }

@@ -6,11 +6,23 @@ namespace AutomeetBackend.Controllers
     [Route("api/[controller]")]
     public class DbAdapterController : ControllerBase
     {
+        private readonly UserRepository _userRepository;
         private readonly UserService _userService;
+        private readonly DbAdapterService? _dbService;
 
-        public DbAdapterController(UserService userService, DbAdapterService? dbService)
+        public DbAdapterController(
+                UserRepository userRepository,
+                UserService userService,
+                DbAdapterService? dbService
+            )
         {
+            _userRepository = userRepository;
             _userService = userService;
+
+            if (dbService != null)
+            {
+                _dbService = dbService;
+            }
         }
 
         // "well...... there are a lot of things to think about here" -Kostya
@@ -31,7 +43,7 @@ namespace AutomeetBackend.Controllers
             await dbAdapter.getColumns();
             if (dbAdapter.Columns is not null)
             {
-                if (await _userService.UpdateUserDbAsync(
+                if (await _userService.TryUpdateUserDbAsync(
                             userEmail,
                             dbAdapter,
                             dbAdapter.Columns
@@ -54,7 +66,7 @@ namespace AutomeetBackend.Controllers
                 List<string> activeColumns
             )
         {
-            User? user = await _userService.GetUserAsync(userEmail);
+            User? user = await _userRepository.GetUserAsync(userEmail);
 
             if (user == null)
             {
@@ -67,14 +79,14 @@ namespace AutomeetBackend.Controllers
             }
 
             user.DbAdapter.ActiveColumns = activeColumns;
-            // save to db
+            await _userRepository.SaveChangesAsync();
             return Ok();
         }
 
         [HttpDelete("{userEmail}")]
         public async Task<ActionResult> DeleteUserDbAdapter(string userEmail)
         {
-            if (await _userService.DeleteUserDbAsync(userEmail))
+            if (await _userService.TryDeleteUserDbAsync(userEmail))
             {
                 return Accepted();
             }

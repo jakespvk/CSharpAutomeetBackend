@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutomeetBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+011b5831b0c51b039de14f83262cc9927df18c8d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b87d93e136dcf64806025451b03037cd80a56cee")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutomeetBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutomeetBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

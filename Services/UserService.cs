@@ -46,10 +46,15 @@ namespace AutomeetBackend.Services
                 List<string>? activeColumns = null
             )
         {
-            User? user = await _repository.GetUserAsync(email);
-            if (user == null)
+            User user;
+
+            try
             {
-                return false;
+                user = await _repository.GetUserAsync(email);
+            }
+            catch (System.NullReferenceException err)
+            {
+                throw err;
             }
 
             user.DbAdapter = dbAdapter;
@@ -64,7 +69,18 @@ namespace AutomeetBackend.Services
                 user.DbAdapter.ActiveColumns = activeColumns;
             }
 
-            await _repository.SaveChangesAsync();
+            try
+            {
+                // creating copies for "saving changes" instead of 
+                // mutating the model hurts performance (to some degree)
+                // but maybe it's better? (is it better?)
+                await _repository.UpdateUserAsync(user);
+            }
+            catch (System.NullReferenceException err)
+            {
+                throw err;
+            }
+
             return true;
         }
 

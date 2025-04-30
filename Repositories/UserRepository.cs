@@ -26,12 +26,37 @@ namespace AutomeetBackend.Repositories
         // change to return User 
         // two options: fail with exception
         // or return default user (create new user or default user)
-        public async Task<User?> GetUserAsync(string email)
+        public async Task<User> GetUserAsync(string email)
         {
             return await _context
                 .Users
                 .Include(u => u.DbAdapter)
-                .FirstOrDefaultAsync(x => x.Email == email);
+                .FirstOrDefaultAsync(x => x.Email == email)
+                ?? throw new System.NullReferenceException("Not found");
+        }
+
+        // is this really a good way to handle this? 
+        //
+        // also, if I'm just rethrowing the errors here,
+        // should I just ignore and handle further up?
+        public async Task<User> UpdateUserAsync(User newUser)
+        {
+            User oldUser;
+            try
+            {
+                oldUser = await GetUserAsync(newUser.Email);
+            }
+            catch (System.NullReferenceException err)
+            {
+                throw err;
+            }
+            catch (System.Exception err)
+            {
+                throw err;
+            }
+            oldUser = newUser;
+            await _context.SaveChangesAsync();
+            return oldUser;
         }
 
         public async Task SaveChangesAsync()

@@ -1,5 +1,5 @@
-using AutomeetBackend.Models;
 using Microsoft.EntityFrameworkCore;
+using AutomeetBackend.Models;
 
 namespace AutomeetBackend.Data
 {

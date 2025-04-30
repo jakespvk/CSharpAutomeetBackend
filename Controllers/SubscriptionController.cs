@@ -2,7 +2,6 @@ using AutomeetBackend.Services;
 using AutomeetBackend.Repositories;
 using AutomeetBackend.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace AutomeetBackend.Controllers

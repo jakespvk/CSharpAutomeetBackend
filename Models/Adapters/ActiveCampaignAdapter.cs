@@ -1,11 +1,15 @@
-namespace AutomeetBackend
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace AutomeetBackend.Models
 {
     public class ActiveCampaignAdapter : DbAdapter
     {
         public string ApiUrl { get; set; }
         public string ApiKey { get; set; }
 
-        public override Guid UserId { get; set; }
+        public override System.Guid UserId { get; set; }
         public override List<string>? Columns { get; set; }
         public override List<string>? ActiveColumns { get; set; }
 

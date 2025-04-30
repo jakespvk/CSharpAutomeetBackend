@@ -1,4 +1,6 @@
-namespace AutomeetBackend
+using System;
+
+namespace AutomeetBackend.Models
 {
     public sealed class User
     {

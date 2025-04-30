@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace AutomeetBackend
+namespace AutomeetBackend.Repositories
 {
     public class UserRepository
     {
@@ -35,5 +35,23 @@ namespace AutomeetBackend
         {
             await _context.SaveChangesAsync();
         }
+
+        /* 
+           can't remember specific pattern to handle nonexistant (try to get
+           entity with incorrect params, no such entity)
+
+           another approach: always return collection, empty or 1 or more
+           -- doesn't change much
+
+           in ORM that Policy uses, own custom unit of work and Service
+           call inService 
+           on the repository level here
+           in Policy case separated from each repository
+           dedicated unit of work (unit of work is a pattern)
+            between repository and dbcontext, services can also
+            access if they *need* to directly
+
+
+           */
     }
 }

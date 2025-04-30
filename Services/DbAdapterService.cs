@@ -1,4 +1,9 @@
-namespace AutomeetBackend
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutomeetBackend.Models;
+
+namespace AutomeetBackend.Services
 {
     public class DbAdapterService
     {

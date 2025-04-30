@@ -1,10 +1,15 @@
-namespace AutomeetBackend
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Net.Http;
+
+namespace AutomeetBackend.Models
 {
     public class AttioAdapter : DbAdapter
     {
         public string AccessToken { get; set; }
 
-        public override Guid UserId { get; set; }
+        public override System.Guid UserId { get; set; }
         public override List<string>? Columns { get; set; }
         public override List<string>? ActiveColumns { get; set; }
 
@@ -16,6 +21,7 @@ namespace AutomeetBackend
 
         public async override Task getColumns()
         {
+            // make a service class that will give me what I need from HttpClient
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("https://api.attio.com/v2/objects");
             client.DefaultRequestHeaders.Authorization =

@@ -1,4 +1,9 @@
-namespace AutomeetBackend
+using AutomeetBackend.Models;
+using AutomeetBackend.Repositories;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+namespace AutomeetBackend.Services
 {
     public sealed class UserService
     {
@@ -9,7 +14,6 @@ namespace AutomeetBackend
         {
             _repository = userRepository;
         }
-
 
         // "this method smells" -Kostya
         // promises to update user sub

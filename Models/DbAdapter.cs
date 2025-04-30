@@ -1,9 +1,12 @@
-namespace AutomeetBackend
+using DA = System.ComponentModel.DataAnnotations;
+using System.Collections;
+
+namespace AutomeetBackend.Models
 {
     public abstract class DbAdapter
     {
-        [System.ComponentModel.DataAnnotations.Key]
-        public abstract Guid UserId { get; set; }
+        [DA.Key]
+        public abstract System.Guid UserId { get; set; }
         public abstract List<string>? Columns { get; set; }
         public abstract List<string>? ActiveColumns { get; set; }
 

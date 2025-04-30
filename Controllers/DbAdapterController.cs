@@ -1,4 +1,8 @@
+using AutomeetBackend.Repositories;
+using AutomeetBackend.Models;
+using AutomeetBackend.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections;
 
 namespace AutomeetBackend.Controllers
 {
@@ -79,6 +83,9 @@ namespace AutomeetBackend.Controllers
             }
 
             user.DbAdapter.ActiveColumns = activeColumns;
+            // should not call non-service methods in controllers
+            // BUT sometimes it's too much overhead to adhere to this
+            // for every single case
             await _userRepository.SaveChangesAsync();
             return Ok();
         }

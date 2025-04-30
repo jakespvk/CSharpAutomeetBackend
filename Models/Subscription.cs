@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace AutomeetBackend
+namespace AutomeetBackend.Models
 {
     public enum PollFrequency
     {

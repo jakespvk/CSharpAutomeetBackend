@@ -1,6 +1,7 @@
+using AutomeetBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace AutomeetBackend
+namespace AutomeetBackend.Data
 {
     public class UserDbContext : DbContext
     {

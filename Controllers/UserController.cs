@@ -1,6 +1,9 @@
+using AutomeetBackend.Models;
+using AutomeetBackend.Services;
+using AutomeetBackend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AutomeetBackend
+namespace AutomeetBackend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

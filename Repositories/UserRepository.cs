@@ -1,4 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
+using AutomeetBackend.Data;
+using AutomeetBackend.Models;
 
 namespace AutomeetBackend.Repositories
 {

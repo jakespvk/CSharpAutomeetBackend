@@ -1,5 +1,7 @@
 using DA = System.ComponentModel.DataAnnotations;
-using System.Collections;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace AutomeetBackend.Models
 {

@@ -54,6 +54,7 @@ namespace AutomeetBackend.Services
             }
             catch (System.NullReferenceException err)
             {
+                // handle this error
                 throw err;
             }
 
@@ -78,7 +79,8 @@ namespace AutomeetBackend.Services
             }
             catch (System.NullReferenceException err)
             {
-                throw err;
+                System.Console.WriteLine(err);
+                return false;
             }
 
             return true;

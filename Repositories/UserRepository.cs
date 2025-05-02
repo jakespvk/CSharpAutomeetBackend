@@ -39,21 +39,12 @@ namespace AutomeetBackend.Repositories
         //
         // also, if I'm just rethrowing the errors here,
         // should I just ignore and handle further up?
+
+        // don't need to return
         public async Task<User> UpdateUserAsync(User newUser)
         {
             User oldUser;
-            try
-            {
-                oldUser = await GetUserAsync(newUser.Email);
-            }
-            catch (System.NullReferenceException err)
-            {
-                throw err;
-            }
-            catch (System.Exception err)
-            {
-                throw err;
-            }
+            oldUser = await GetUserAsync(newUser.Email);
             oldUser = newUser;
             await _context.SaveChangesAsync();
             return oldUser;

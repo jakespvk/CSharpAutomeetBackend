@@ -1,5 +1,6 @@
 using AutomeetBackend.Models;
 using AutomeetBackend.Repositories;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -9,55 +10,92 @@ namespace AutomeetBackend.Services
     {
         private readonly UserRepository _repository;
 
-        // shouldn't know about the db
         public UserService(UserRepository userRepository)
         {
             _repository = userRepository;
         }
 
-        // "this method smells" -Kostya
-        // promises to update user sub
-        // some mysterious reason can return false
-        // should be "TryUpdateUserSubscriptionAsync"
-        public async Task<bool> TryUpdateUserSubscriptionAsync(
+        public async Task<User> TryGetUserAsync(string email)
+        {
+            return await _repository.GetUserAsync(email);
+            // User user;
+            //
+            // try
+            // {
+            //     user = await _repository.GetUserAsync(email);
+            // }
+            // catch (Exception err)
+            // {
+            //     Console.WriteLine("err:", err.Message);
+            //     throw;
+            // }
+            //
+            // return user;
+        }
+
+        public async Task<User> TryCreateUserAsync(string email)
+        {
+            return await _repository.CreateUserAsync(email);
+            // User user;
+            //
+            // try
+            // {
+            //     user = await _repository.CreateUserAsync(email);
+            // }
+            // catch (Exception err)
+            // {
+            //     Console.WriteLine("err:", err.Message);
+            //     throw;
+            // }
+            //
+            // return user;
+        }
+
+        public async Task TryUpdateUserSubscriptionAsync(
+        // public async Task<bool> TryUpdateUserSubscriptionAsync(
                 string email,
                 Subscription subscription
             )
         {
-            User? user = await _repository.GetUserAsync(email);
-
-            // gray area - maybe belong in UserRepository, maybe not
-            // keep in service, kind of business logic
-            if (user == null)
-            {
-                return false;
-            }
-
+            User user = await _repository.GetUserAsync(email);
             user.Subscription = subscription;
-            await _repository.SaveChangesAsync();
-            return true;
+            await _repository.UpdateUserAsync(user);
+            // User user;
+            //
+            // try
+            // {
+            //     user = await _repository.GetUserAsync(email);
+            // }
+            // catch (Exception err)
+            // {
+            //     Console.WriteLine("err:", err.Message);
+            //     return false;
+            // }
+            //
+            // user.Subscription = subscription;
+            //
+            // try
+            // {
+            //     await _repository.UpdateUserAsync(user);
+            // }
+            // catch (System.NullReferenceException err)
+            // {
+            //     System.Console.WriteLine("err:", err.Message);
+            //     return false;
+            // }
+            //
+            // return true;
         }
 
-        // keep in service, kind of business logic
-        public async Task<bool> TryUpdateUserDbAsync(
+        public async Task TryUpdateUserDbAsync(
+        // public async Task<bool> TryUpdateUserDbAsync(
                 string email,
                 DbAdapter dbAdapter,
                 List<string>? columns = null,
                 List<string>? activeColumns = null
             )
         {
-            User user;
-
-            try
-            {
-                user = await _repository.GetUserAsync(email);
-            }
-            catch (System.NullReferenceException err)
-            {
-                // handle this error
-                throw err;
-            }
-
+            User user = await _repository.GetUserAsync(email);
             user.DbAdapter = dbAdapter;
 
             if (columns != null)
@@ -67,40 +105,72 @@ namespace AutomeetBackend.Services
 
             if (activeColumns != null)
             {
-                user.DbAdapter.ActiveColumns = activeColumns;
+                user.DbAdapter.ActiveColumns = columns;
             }
 
-            try
-            {
-                // creating copies for "saving changes" instead of 
-                // mutating the model hurts performance (to some degree)
-                // but maybe it's better? (is it better?)
-                await _repository.UpdateUserAsync(user);
-            }
-            catch (System.NullReferenceException err)
-            {
-                System.Console.WriteLine(err);
-                return false;
-            }
+            await _repository.UpdateUserAsync(user);
 
-            return true;
+            // User user;
+            //
+            // try
+            // {
+            //     user = await _repository.GetUserAsync(email);
+            // }
+            // catch (System.NullReferenceException err)
+            // {
+            //     // handle this error
+            //     Console.WriteLine("error: " + err.Message);
+            //     throw;
+            // }
+            //
+            // user.DbAdapter = dbAdapter;
+            //
+            // if (columns != null)
+            // {
+            //     user.DbAdapter.Columns = columns;
+            // }
+            //
+            // if (activeColumns != null)
+            // {
+            //     user.DbAdapter.ActiveColumns = activeColumns;
+            // }
+            //
+            // try
+            // {
+            //     await _repository.UpdateUserAsync(user);
+            // }
+            // catch (System.NullReferenceException err)
+            // {
+            //     System.Console.WriteLine("err:", err.Message);
+            //     return false;
+            // }
+            //
+            // return true;
         }
 
-        public async Task<bool> TryDeleteUserDbAsync(
+        public async Task TryDeleteUserDbAsync(
+        // public async Task<bool> TryDeleteUserDbAsync(
                 string email
             )
         {
-            User? user = await _repository.GetUserAsync(email);
-
-            if (user == null)
-            {
-                return false;
-            }
-
+            User user = await _repository.GetUserAsync(email);
             user.DbAdapter = null;
-
-            await _repository.SaveChangesAsync();
-            return true;
+            await _repository.UpdateUserAsync(user);
+            // User user;
+            //
+            // try
+            // {
+            //     user = await _repository.GetUserAsync(email);
+            //     user.DbAdapter = null;
+            //     await _repository.UpdateUserAsync(user);
+            // }
+            // catch (Exception err)
+            // {
+            //     Console.WriteLine("err:", err.Message);
+            //     return false;
+            // }
+            //
+            // return true;
         }
     }
 }

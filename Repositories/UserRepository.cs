@@ -35,19 +35,12 @@ namespace AutomeetBackend.Repositories
                 ?? throw new System.NullReferenceException("Not found");
         }
 
-        // is this really a good way to handle this? 
-        //
-        // also, if I'm just rethrowing the errors here,
-        // should I just ignore and handle further up?
-
-        // don't need to return
-        public async Task<User> UpdateUserAsync(User newUser)
+        public async Task UpdateUserAsync(User newUser)
         {
             User oldUser;
             oldUser = await GetUserAsync(newUser.Email);
             oldUser = newUser;
             await _context.SaveChangesAsync();
-            return oldUser;
         }
 
         public async Task SaveChangesAsync()

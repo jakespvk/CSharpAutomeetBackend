@@ -2,6 +2,7 @@ using AutomeetBackend.Repositories;
 using AutomeetBackend.Models;
 using AutomeetBackend.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -71,10 +72,14 @@ namespace AutomeetBackend.Controllers
                 List<string> activeColumns
             )
         {
-            User? user = await _userRepository.GetUserAsync(userEmail);
-
-            if (user == null)
+            User user;
+            try
             {
+                user = await _userRepository.GetUserAsync(userEmail);
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("err:", err.Message);
                 return NotFound();
             }
 

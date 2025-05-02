@@ -2,6 +2,7 @@ using AutomeetBackend.Models;
 using AutomeetBackend.Services;
 using AutomeetBackend.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AutomeetBackend.Controllers
@@ -22,8 +23,16 @@ namespace AutomeetBackend.Controllers
         [HttpGet("{userEmail}")]
         public async Task<ActionResult<User>> GetUser(string userEmail)
         {
-            User? user = await _userRepository.GetUserAsync(userEmail);
-            if (user == null) return NotFound();
+            User user;
+            try
+            {
+                user = await _userRepository.GetUserAsync(userEmail);
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("err:", err.Message);
+                return NotFound();
+            }
             return user;
         }
 

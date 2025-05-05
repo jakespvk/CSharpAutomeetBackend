@@ -1,4 +1,3 @@
-using AutomeetBackend.Repositories;
 using AutomeetBackend.Models;
 using AutomeetBackend.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +11,14 @@ namespace AutomeetBackend.Controllers
     [Route("api/[controller]")]
     public class DbAdapterController : ControllerBase
     {
-        private readonly UserRepository _userRepository;
         private readonly UserService _userService;
         private readonly DbAdapterService? _dbService;
 
         public DbAdapterController(
-                UserRepository userRepository,
                 UserService userService,
                 DbAdapterService? dbService
             )
         {
-            _userRepository = userRepository;
             _userService = userService;
 
             if (dbService != null)
@@ -49,18 +45,23 @@ namespace AutomeetBackend.Controllers
             await dbAdapter.getColumns();
             if (dbAdapter.Columns is not null)
             {
-                if (await _userService.TryUpdateUserDbAsync(
-                            userEmail,
-                            dbAdapter,
-                            dbAdapter.Columns
-                        )
-                    )
+                try
                 {
+                    await _userService.TryUpdateUserDbAsync(
+                                userEmail,
+                                dbAdapter,
+                                dbAdapter.Columns
+                            );
+
                     {
                         return dbAdapter.Columns;
                     }
                 }
-                return NotFound();
+                catch (Exception err)
+                {
+                    Console.WriteLine("err:", err.Message);
+                    return NotFound();
+                }
             }
             return BadRequest("There was an issue retrieving data from your db api");
         }
@@ -72,38 +73,43 @@ namespace AutomeetBackend.Controllers
                 List<string> activeColumns
             )
         {
-            User user;
             try
             {
-                user = await _userRepository.GetUserAsync(userEmail);
+                User user = await _userService.TryGetUserAsync(userEmail);
+                if (user.DbAdapter == null)
+                {
+                    return BadRequest("User does not have a DbAdapter defined");
+                }
+                else
+                {
+                    await _userService.TryUpdateUserDbAsync(
+                            userEmail,
+                            user.DbAdapter,
+                            activeColumns: activeColumns
+                        );
+                    return Ok();
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("err:", err.Message);
+                return BadRequest("User not found");
+            }
+        }
+
+        [HttpDelete("{userEmail}")]
+        public async Task<ActionResult> DeleteUserDbAdapter(string userEmail)
+        {
+            try
+            {
+                await _userService.TryDeleteUserDbAsync(userEmail);
+                return Accepted();
             }
             catch (Exception err)
             {
                 Console.WriteLine("err:", err.Message);
                 return NotFound();
             }
-
-            if (user.DbAdapter == null)
-            {
-                return BadRequest("No Db Provider set");
-            }
-
-            user.DbAdapter.ActiveColumns = activeColumns;
-            // should not call non-service methods in controllers
-            // BUT sometimes it's too much overhead to adhere to this
-            // for every single case
-            await _userRepository.SaveChangesAsync();
-            return Ok();
-        }
-
-        [HttpDelete("{userEmail}")]
-        public async Task<ActionResult> DeleteUserDbAdapter(string userEmail)
-        {
-            if (await _userService.TryDeleteUserDbAsync(userEmail))
-            {
-                return Accepted();
-            }
-            return NotFound();
         }
     }
 }

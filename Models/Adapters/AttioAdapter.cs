@@ -24,9 +24,10 @@ namespace AutomeetBackend.Models
         {
             // make a service class that will give me what I need from HttpClient
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("https://api.attio.com/v2/objects");
-            client.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
+            // client.BaseAddress = new Uri("https://api.attio.com/v2/objects");
+            client.BaseAddress = new Uri("http://localhost:5224/v2/objects");
+            // client.DefaultRequestHeaders.Authorization =
+            //     new System.Net.Http.Headers.AuthenticationHeaderValue(AccessToken);
             var response = await client.GetAsync("/people");
             Console.WriteLine(response.Content);
             this.Columns = await response.Content.ReadFromJsonAsync<List<string>>();

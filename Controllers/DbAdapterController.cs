@@ -12,19 +12,19 @@ namespace AutomeetBackend.Controllers
     public class DbAdapterController : ControllerBase
     {
         private readonly UserService _userService;
-        private readonly DbAdapterService? _dbService;
+        // private readonly DbAdapterService? _dbService;
 
         public DbAdapterController(
-                UserService userService,
-                DbAdapterService? dbService
+                UserService userService
+            // DbAdapterService? dbService
             )
         {
             _userService = userService;
 
-            if (dbService != null)
-            {
-                _dbService = dbService;
-            }
+            // if (dbService != null)
+            // {
+            //     _dbService = dbService;
+            // }
         }
 
         // "well...... there are a lot of things to think about here" -Kostya

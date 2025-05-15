@@ -43,7 +43,7 @@ namespace AutomeetBackend.Controllers
             )
         {
             await dbAdapter.getColumns();
-            if (dbAdapter.Columns is not null)
+            if (dbAdapter.Columns != null)
             {
                 try
                 {
@@ -53,9 +53,7 @@ namespace AutomeetBackend.Controllers
                                 dbAdapter.Columns
                             );
 
-                    {
-                        return dbAdapter.Columns;
-                    }
+                    return dbAdapter.Columns;
                 }
                 catch (Exception err)
                 {
